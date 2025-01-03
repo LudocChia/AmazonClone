@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/amazon-ember">
+    <link rel="stylesheet" href="style/base.css">
+    <link rel="stylesheet" href="style/style.css">
+    <title>Amazon.com Shopping Cart</title>
+</head>
+
+<body class="cart-body">
+    <header class="header">
+        <a href="./index.html">
+            <div class="header__left">
+                <img class="header__logo" src="images/amazon-logo-white.png" alt="Amazon Logo">
+            </div>
+        </a>
+        <div class="header__search">
+            <input class="header__search-bar" type="text" placeholder="Search Amazon">
+            <button class="header__search-button"><i class="bi bi-search"></i></button>
+        </div>
+        <div class="header__right">
+            <a href="./order.html">
+                <div class="header__order">
+                    <p class="header__order-label">Returns & Orders</p>
+                </div>
+            </a>
+            <a href="./checkout.html">
+                <div class="header__cart">
+                    <img class="header__cart-icon" src="images/icons/cart-icon.png" alt="">
+                    <span class="header__cart-quantity"></span>
+                    <p class="header__cart-label">Cart</p>
+                </div>
+            </a>
+        </div>
+    </header>
+    <main class="main main__cart">
+        <section class="container container__cart-list">
+            <div class="cart-list__header">
+                <h1 class="title title__heading-1">Shopping Cart</h1>
+                <button class="cart-list__select-all">Select all items</button>
+                <p class="cart-list__price">Price</p>
+            </div>
+            <div class="cart-items">
+            </div>
+            <div class="cart-list__total text--big">
+                <span class="cart-list__total-label">No Items Selected</span>
+                <span class="cart-list__total-quantity"></span>
+                <span class="cart-list__total-price text--bold"></span>
+            </div>
+        </section>
+        <section class="checkout">
+            <div class="container container__checkout-summary">
+                <div class="checkout-summary__total text--big">
+                    <span class="checkout-summary__label"></span><span class="checkout-summary__quantity"> No items
+                        Selected
+                    </span>
+                    <span class="checkout-summary__price  text--bold"></span>
+                </div>
+                <button class="button button--primary">Proceed to checkout</button>
+            </div>
+            <div class="container container__prime-ads">
+                <div class="prime-ads__left">
+                    <img src="./images/prime-logo.svg" alt="">
+                </div>
+                <div class="prime-ads__right">
+                    <p class="text--bold text--medium text--line-height">
+                        Free fast deliver. No order minimum. Exclusive savings. Start your 30-days free trial of
+                        Prime.
+                    </p>
+                    <button class="button button--ads">
+                        Join Prime
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script type="module" src="scripts/checkout.js"></script>
+</body>
+
+</html>
