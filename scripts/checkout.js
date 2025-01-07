@@ -1,8 +1,19 @@
-import { cart, updateCartStorage } from '../data/cart.js';
+import { cart, removeFromCart, updateCartItemQuantity, toggleCartItemCheckStatus, selectAllCartItems, unselectAllCartItems } from '../data/cart.js';
 import { products } from '../data/products.js';
+import formatCurrency from './utils/currency.js';
 
 const cartQuantity = document.querySelector('.header__cart-quantity');
 cartQuantity.innerHTML = cart.length;
+
+
+const cartItemsTotalQuantityElement = document.querySelector('.cart-list__total-quantity');
+const cartItemsTotalPriceElement = document.querySelector('.cart-list__total-price');
+const cartListTotalLabelElement = document.querySelector('.cart-list__total-label');
+const checkoutSummaryPriceElement = document.querySelector('.checkout-summary__price');
+const checkoutSummaryLabelElement = document.querySelector('.checkout-summary__label');
+const checkoutSummaryQuantityElement = document.querySelector('.checkout-summary__quantity');
+
+const selectAllItemsButton = document.querySelector('.cart-list__select-all');
 
 const cartItemsElement = document.querySelector('.cart-items');
 let cartItemsElementHtml = '';
@@ -74,81 +85,67 @@ cartItemsElement.innerHTML = cartItemsElementHtml;
 
 const buttonDecreaseCartItemQuantity = document.querySelectorAll('.cart-item__quantity-decrease');
 const buttonIncreaseCartItemQuantity = document.querySelectorAll('.cart-item__quantity-increase');
-const buttonDeleteCartItems = document.querySelectorAll('.cart-item__delete');
+const buttonDeleteCartItem = document.querySelectorAll('.cart-item__delete');
 
-buttonDeleteCartItems.forEach((button) => {
+buttonDeleteCartItem.forEach((button) => {
     button.addEventListener('click', () => {
-        updateCart('delete', button);
-    })
-})
-
-buttonDecreaseCartItemQuantity.forEach((button) => {
-    button.addEventListener('click', () => {
-        updateCart('decrease', button);
+        const cartItemElement = button.closest('.cart-item');
+        const cartItemQuantityElement = cartItemElement.querySelector('.cart-item__quantity-value');
+        const productId = cartItemElement.dataset.productId;
+        removeFromCart(productId);
+        cartItemElement.remove();
+        cartItemQuantityElement.innerText = cartItem.quantity;
     })
 })
 
 buttonIncreaseCartItemQuantity.forEach((button) => {
     button.addEventListener('click', () => {
-        updateCart('increase', button);
+        const cartItemElement = button.closest('.cart-item');
+        const buttonDeleteCartItem = cartItemElement.querySelector('.cart-item__delete');
+        const buttonDecreaseCartItem = cartItemElement.querySelector('.cart-item__quantity-decrease');
+        const cartItemQuantityElement = cartItemElement.querySelector('.cart-item__quantity-value');
+        const productId = cartItemElement.dataset.productId;
+        const cartItemQuantity = updateCartItemQuantity(productId, 'increase', 1);
+        cartItemQuantityElement.innerText = cartItemQuantity;
+
+        if (cartItemQuantity > 1) {
+            buttonDecreaseCartItem.classList.remove('cart-item__quantity-decrease--hidden');
+            buttonDeleteCartItem.classList.add('cart-item__delete--hidden');
+        } else {
+            buttonDecreaseCartItem.classList.add('cart-item__quantity-decrease--hidden');
+            buttonDeleteCartItem.classList.remove('cart-item__delete--hidden');
+        }
     })
 })
 
-function updateCart(action, button) {
-    const cartItemElement = button.closest('.cart-item');
-    const buttonDecreaseCartItem = cartItemElement.querySelector('.cart-item__quantity-decrease');
-    const buttonDeleteCartItem = cartItemElement.querySelector('.cart-item__delete');
-    const cartItemQuantityElement = cartItemElement.querySelector('.cart-item__quantity-value');
-    const productId = cartItemElement.dataset.productId;
+buttonDecreaseCartItemQuantity.forEach((button) => {
+    button.addEventListener('click', () => {
+        const cartItemElement = button.closest('.cart-item');
+        const buttonDeleteCartItem = cartItemElement.querySelector('.cart-item__delete');
+        const buttonDecreaseCartItem = cartItemElement.querySelector('.cart-item__quantity-decrease');
+        const cartItemQuantityElement = cartItemElement.querySelector('.cart-item__quantity-value');
+        const productId = cartItemElement.dataset.productId;
+        const cartItemQuantity = updateCartItemQuantity(productId, 'decrease', 1);
+        cartItemQuantityElement.innerText = cartItemQuantity;
 
-    cart.forEach((cartItem, index) => {
-        if (cartItem.productId === productId) {
-            if (action === 'increase') {
-                cartItem.quantity += 1
-            } else if (action === 'decrease') {
-                cartItem.quantity -= 1
-            } else {
-                cart.splice(index, 1)
-                cartItemElement.remove();
-            }
-
-            if (cartItem.quantity > 1) {
-                buttonDecreaseCartItem.classList.remove('cart-item__quantity-decrease--hidden');
-                buttonDeleteCartItem.classList.add('cart-item__delete--hidden');
-            } else {
-                buttonDecreaseCartItem.classList.add('cart-item__quantity-decrease--hidden');
-                buttonDeleteCartItem.classList.remove('cart-item__delete--hidden');
-            }
-            cartItemQuantityElement.innerText = cartItem.quantity;
+        if (cartItemQuantity > 1) {
+            buttonDecreaseCartItem.classList.remove('cart-item__quantity-decrease--hidden');
+            buttonDeleteCartItem.classList.add('cart-item__delete--hidden');
+        } else {
+            buttonDecreaseCartItem.classList.add('cart-item__quantity-decrease--hidden');
+            buttonDeleteCartItem.classList.remove('cart-item__delete--hidden');
         }
     })
-    updateCartStorage();
-    updateCartItemsTotal();
-}
+    updateCartItemsTotal()
+})
 
 const cartItemCheckboxes = document.querySelectorAll('.cart-item__checkbox');
-
-const cartItemsTotalQuantityElement = document.querySelector('.cart-list__total-quantity');
-const cartItemsTotalPriceElement = document.querySelector('.cart-list__total-price');
-const cartListTotalLabelElement = document.querySelector('.cart-list__total-label');
-const checkoutSummaryPriceElement = document.querySelector('.checkout-summary__price');
-const checkoutSummaryLabelElement = document.querySelector('.checkout-summary__label');
-const checkoutSummaryQuantityElement = document.querySelector('.checkout-summary__quantity');
-
-const selectAllItemsButton = document.querySelector('.cart-list__select-all');
-
 
 cartItemCheckboxes.forEach((checkbox) => {
     checkbox.addEventListener('click', () => {
         const cartItemElement = checkbox.closest('.cart-item');
         const productId = cartItemElement.dataset.productId;
-
-        cart.forEach((cartItem) => {
-            if (cartItem.productId === productId) {
-                cartItem.checked ? cartItem.checked = false : cartItem.checked = true;
-            }
-        })
-        updateCartStorage();
+        toggleCartItemCheckStatus(productId)
         updateCartItemsTotal();
     })
 })
@@ -188,8 +185,8 @@ function updateCartItemsTotal() {
         cartItemsTotalPriceElement.innerText = '';
         checkoutSummaryPriceElement.innerText = '';
     } else {
-        cartItemsTotalPriceElement.innerText = '$' + checkedCartItemsPriceCents / 100;
-        checkoutSummaryPriceElement.innerText = '$' + checkedCartItemsPriceCents / 100;
+        cartItemsTotalPriceElement.innerText = formatCurrency(checkedCartItemsPriceCents);
+        checkoutSummaryPriceElement.innerText = formatCurrency(checkedCartItemsPriceCents);
     }
 }
 
@@ -200,24 +197,18 @@ selectAllItemsButton.addEventListener('click', () => {
     if (allChecked) {
         allChecked = false;
         selectAllItemsButton.innerText = 'Select all items';
-        cart.forEach((cartItem) => {
-            cartItem.checked = false;
-            console.log()
-            cartItemCheckboxes.forEach((checkbox) => {
-                checkbox.checked = false;
-            })
+        cartItemCheckboxes.forEach((checkbox) => {
+            checkbox.checked = false;
         })
+        unselectAllCartItems()
     } else {
         allChecked = true;
         selectAllItemsButton.innerText = 'Deselecte all items';
-        cart.forEach((cartItem) => {
-            cartItem.checked = true;
-            cartItemCheckboxes.forEach((checkbox) => {
-                checkbox.checked = true;
-            })
+        cartItemCheckboxes.forEach((checkbox) => {
+            checkbox.checked = true;
         })
+        selectAllCartItems()
     }
-    updateCartStorage();
     updateCartItemsTotal();
 })
 updateCartItemsTotal();
