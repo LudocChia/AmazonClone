@@ -1,6 +1,6 @@
-import { cart, removeFromCart, updateCartItemQuantity, toggleCartItemCheckStatus, selectAllCartItems, unselectAllCartItems } from '../data/cart.js';
-import { products } from '../data/products.js';
-import formatCurrency from './utils/currency.js';
+import { cart, removeFromCart, updateCartItemQuantity, toggleCartItemCheckStatus, selectAllCartItems, unselectAllCartItems } from '../scripts/data/cart.js';
+import { products } from '../scripts/data/products.js';
+import { formatAsMYR } from './utils/currency.js';
 
 const cartQuantity = document.querySelector('.header__cart-quantity');
 cartQuantity.innerHTML = cart.length;
@@ -185,8 +185,8 @@ function updateCartItemsTotal() {
         cartItemsTotalPriceElement.innerText = '';
         checkoutSummaryPriceElement.innerText = '';
     } else {
-        cartItemsTotalPriceElement.innerText = formatCurrency(checkedCartItemsPriceCents);
-        checkoutSummaryPriceElement.innerText = formatCurrency(checkedCartItemsPriceCents);
+        cartItemsTotalPriceElement.innerText = formatAsMYR(checkedCartItemsPriceCents);
+        checkoutSummaryPriceElement.innerText = formatAsMYR(checkedCartItemsPriceCents);
     }
 }
 

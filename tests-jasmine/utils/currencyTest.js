@@ -1,29 +1,29 @@
-import { formatAsMYR, getRinggitPart, getCentPart } from "../scripts/utils/currency.js";
+import { formatAsMYR, getRinggitPart, getCentPart } from "../../scripts/utils/currency.js";
 
 describe('test suite: formatAsMYR', () => {
     it('Basic Case: Convets cents into Ringgits', () => {
         expect(formatAsMYR(2095)).toEqual('20.95');
     });
 
-    it('Edge Case: Works with 0', () => {
+    it('edge case: works with 0', () => {
         expect(formatAsMYR(0)).toEqual('0.00');
     });
 
-    it('Edge Case: Rounds Up to the Nearest Cent', () => {
+    it('edge case: rounds up to the nearest cent', () => {
         expect(formatAsMYR(2000.5)).toEqual('20.01');
     });
 });
 
 describe('test suite: getRinggitPart and getCentPart', () => {
-    it('Basic Case: Display the correct Ringgit and Cent for normal input', () => {
+    it('basic case: display the correct ringgit and cent for normal input', () => {
         expect(getRinggitPart(2095)).toEqual('20');
         expect(getCentPart(2095)).toEqual('95');
     })
-    it('Edge Case: Works with 0', () => {
+    it('edge case: works with 0', () => {
         expect(getRinggitPart(0)).toEqual('0')
         expect(getCentPart(0)).toEqual('00')
     })
-    it('Edge Case: Displays Correct Ringgit and Cent for partial floats', () => {
+    it('edge case: displays correct ringgit and cent for partial floats', () => {
         expect(getRinggitPart(2000.5)).toEqual('20');
         expect(getCentPart(2000.5)).toEqual('01');
     })
