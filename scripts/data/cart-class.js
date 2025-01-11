@@ -2,20 +2,20 @@ import { products } from '../data/productsModel.js';
 
 class Cart {
     // class fields
-    cartItems;
-    localStorage;
+    cartItems; //Public Property
+    #localStorageKey; //Private Property
 
     constructor(localStorageKey) {
-        this.localStorageKey = localStorageKey;
-        this.loadFromStorage();
+        this.#localStorageKey = localStorageKey;
+        this.#loadFromStorage();
     }
 
-    loadFromStorage() {
+    #loadFromStorage() {
         this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey)) || [];
     }
 
     updateCartStorage() {
-        localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItems));
+        localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
     }
 
     addToCart(productId, quantity, checked) {
@@ -109,6 +109,7 @@ class Cart {
 
 const cart = new Cart('cart-oop');
 const businessCart = new Cart('cart-business');
+
 
 console.log(cart)
 console.log(businessCart)
