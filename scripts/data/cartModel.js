@@ -1,4 +1,12 @@
-export const cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+import { products } from '../data/productsModel.js';
+
+export let cart;
+
+loadFromStorage();
+
+export function loadFromaStorage() {
+    cart = JSON.parse(localStorage.getItem('cartItems')) || [];
+}
 
 export function addToCart(productId, quantity, checked) {
     let matchingItem;
@@ -69,5 +77,25 @@ export function unselectAllCartItems() {
 
 export function updateCartStorage() {
     localStorage.setItem('cartItems', JSON.stringify(cart));
-    console.log(cart);
+    // console.log(cart);
+}
+
+export function calculateSelectedCartItems() {
+    let totalCartQuantity = 0;
+    let totalCartPriceCents = 0;
+
+    cart.forEach((cartItem) => {
+        if (cartItem.checked) {
+            totalCartQuantity += cartItem.quantity;
+        }
+    })
+
+    cart.forEach((cartItem) => {
+        const product = products.find(productItem => productItem.id === cartItem.productId)
+        if (!product) return;
+
+        totalCartPriceCents += product.priceCents * cartItem.quantity;
+    })
+
+    return { totalCartQuantity, totalCartPriceCents };
 }

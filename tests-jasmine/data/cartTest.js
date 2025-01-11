@@ -1,16 +1,42 @@
-import { addToCart, cart } from '../../scripts/data/cart.js';
+import { addToCart, cart, loadFromStorage } from '../../scripts/data/cartModel.js';
 
-describe('test suit: addToCart', () => {
-    it('basic case: adds an existing product to the cart', () => {
-        // addToCart('e43638ce-6aa0-4b85-b27f-e1d07eb678c6', 1, false);
-    })
+// cartModel.spec.js
+describe('test suite: addToCart', () => {
+    beforeAll(() => {
+        // Provide a custom localStorage mock
+        let store = {};
 
-    it('edge case: adds a new product to the cart', () => {
-        spyOn(localStorage, 'getItem').and.callFake(() => {
-            return JSON.stringify([]);
+        const mockLocalStorage = {
+            getItem: jasmine.createSpy('getItem').and.callFake(key => {
+                return store[key] || null;
+            }),
+            setItem: jasmine.createSpy('setItem').and.callFake((key, val) => {
+                store[key] = val;
+            }),
+            clear: jasmine.createSpy('clear').and.callFake(() => {
+                store = {};
+            })
+        };
+
+        // Replace the real localStorage with our mock
+        Object.defineProperty(window, 'localStorage', {
+            value: mockLocalStorage,
+            writable: true
         });
+    });
 
-        addToCart('e43638ce-6aa0-4b85-b27f-e1d07eb678c6', 1, false);
+    beforeEach(() => {
+        // Reset the store before each test if desired
+        window.localStorage.clear();
+    });
+
+    it('adds a new product to the cart', () => {
+        // Now cartModel sees an empty store upon load
+        loadFromStorage(); // cart = []
+        addToCart('fake-product-id', 1, false);
+
         expect(cart.length).toEqual(1);
-    })
+        expect(cart[0].productId).toBe('fake-product-id');
+        expect(localStorage.setItem).toHaveBeenCalled();  // <-- works, it's truly a spy
+    });
 });
