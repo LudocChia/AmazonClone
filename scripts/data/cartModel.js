@@ -1,101 +1,111 @@
-import { products } from '../data/productsModel.js';
+import { products } from './productsModel.js';
 
-export let cart;
+export class Cart {
+    // class fields
+    cartItems; //Public Property
+    #localStorageKey; //Private Property
 
-loadFromStorage();
+    constructor(localStorageKey) {
+        this.#localStorageKey = localStorageKey;
+        this.#loadFromStorage();
+    }
 
-export function loadFromaStorage() {
-    cart = JSON.parse(localStorage.getItem('cartItems')) || [];
-}
+    #loadFromStorage() {
+        this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey)) || [];
+    }
 
-export function addToCart(productId, quantity, checked) {
-    let matchingItem;
+    updateCartStorage() {
+        localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
+    }
 
-    cart.forEach((cartItem) => {
-        if (productId === cartItem.productId) {
-            matchingItem = cartItem;
-        }
-    })
+    addToCart(productId, quantity, checked) {
+        let matchingItem;
 
-    if (matchingItem) {
-        matchingItem.quantity += quantity;
-    } else {
-        cart.push({
-            productId,
-            quantity,
-            checked
-        })
-    };
-    updateCartStorage();
-}
-
-export function removeFromCart(productId) {
-    cart.forEach((cartItem, index) =>
-        cartItem.productId === productId && cart.splice(index, 1)
-    )
-    updateCartStorage();
-}
-
-export function toggleCartItemCheckStatus(productId) {
-    cart.forEach((cartItem) => {
-        if (cartItem.productId === productId) {
-            cartItem.checked ? cartItem.checked = false : cartItem.checked = true;
-        }
-    })
-    updateCartStorage();
-}
-
-export function updateCartItemQuantity(productId, action, value) {
-    let cartItemQuantity = 0;
-    cart.forEach((cartItem) => {
-        if (cartItem.productId === productId) {
-            if (action === 'increase') {
-                cartItem.quantity += value
-            } else {
-                cartItem.quantity -= value
+        this.cartItems.forEach((cartItem) => {
+            if (productId === cartItem.productId) {
+                matchingItem = cartItem;
             }
-            cartItemQuantity = cartItem.quantity;
-        }
-    })
-    updateCartStorage();
-    return cartItemQuantity;
-}
+        })
 
-export function selectAllCartItems() {
-    cart.forEach((cartItem) => {
-        cartItem.checked = true;
+        if (matchingItem) {
+            matchingItem.quantity += quantity;
+        } else {
+            this.cartItems.push({
+                productId,
+                quantity,
+                checked
+            })
+        };
+        this.updateCartStorage();
+    }
 
-    })
-    updateCartStorage()
-}
-export function unselectAllCartItems() {
-    cart.forEach((cartItem) => {
-        cartItem.checked = false;
-    })
-    updateCartStorage()
-}
+    removeFromCart(productId) {
+        this.cartItems.forEach((cartItem, index) =>
+            cartItem.productId === productId && this.cartItems.splice(index, 1)
+        )
+        this.updateCartStorage();
+    }
 
-export function updateCartStorage() {
-    localStorage.setItem('cartItems', JSON.stringify(cart));
-    // console.log(cart);
-}
+    toggleCartItemCheckStatus(productId) {
+        this.cartItems.forEach((cartItem) => {
+            if (cartItem.productId === productId) {
+                cartItem.checked ? cartItem.checked = false : cartItem.checked = true;
+            }
+        })
+        this.updateCartStorage();
+    }
 
-export function calculateSelectedCartItems() {
-    let totalCartQuantity = 0;
-    let totalCartPriceCents = 0;
+    updateCartItemQuantity(productId, action, value) {
+        let cartItemQuantity = 0;
+        this.cartItems.forEach((cartItem) => {
+            if (cartItem.productId === productId) {
+                if (action === 'increase') {
+                    cartItem.quantity += value
+                } else {
+                    cartItem.quantity -= value
+                }
+                cartItemQuantity = cartItem.quantity;
+            }
+        })
+        this.updateCartStorage();
+        return cartItemQuantity;
+    }
 
-    cart.forEach((cartItem) => {
-        if (cartItem.checked) {
-            totalCartQuantity += cartItem.quantity;
-        }
-    })
+    selectAllCartItems() {
+        this.cartItems.forEach((cartItem) => {
+            cartItem.checked = true;
 
-    cart.forEach((cartItem) => {
-        const product = products.find(productItem => productItem.id === cartItem.productId)
-        if (!product) return;
+        })
+        this.updateCartStorage()
+    }
 
-        totalCartPriceCents += product.priceCents * cartItem.quantity;
-    })
+    unselectAllCartItems() {
+        this.cartItems.forEach((cartItem) => {
+            cartItem.checked = false;
+        })
+        this.updateCartStorage()
+    }
 
-    return { totalCartQuantity, totalCartPriceCents };
-}
+    calculateSelectedCartItems() {
+        let totalCartQuantity = 0;
+        let totalCartPriceCents = 0;
+
+        this.cartItems.forEach((cartItem) => {
+            if (cartItem.checked) {
+                totalCartQuantity += cartItem.quantity;
+            }
+        })
+
+        this.cartItems.forEach((cartItem) => {
+            const product = products.find(productItem => productItem.id === cartItem.productId)
+            if (!product) return;
+
+            totalCartPriceCents += product.priceCents * cartItem.quantity;
+        })
+
+        return { totalCartQuantity, totalCartPriceCents };
+    }
+};
+
+export const cart = new Cart('cart-oop');
+export const businessCart = new Cart('cart-business');

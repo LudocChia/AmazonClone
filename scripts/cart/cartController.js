@@ -1,7 +1,7 @@
 // import { cart, removeFromCart, updateCartItemQuantity, toggleCartItemCheckStatus, selectAllCartItems, unselectAllCartItems, calculateSelectedCartItems } from '../data/cartModel.js';
 import { products } from '../data/productsModel.js';
 import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './cartView.js';
-import '../data/cart-class.js';
+import { cart } from '../data/cartModel.js';
 
 // Update Header Cart Count
 cartQuantityDisplay(cart.length);
