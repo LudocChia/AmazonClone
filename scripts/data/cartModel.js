@@ -11,7 +11,7 @@ export class Cart {
     }
 
     #loadFromStorage() {
-        this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey)) || [];
+        this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
     }
 
     updateCartStorage() {
@@ -74,7 +74,6 @@ export class Cart {
     selectAllCartItems() {
         this.cartItems.forEach((cartItem) => {
             cartItem.checked = true;
-
         })
         this.updateCartStorage()
     }
@@ -97,7 +96,7 @@ export class Cart {
         })
 
         this.cartItems.forEach((cartItem) => {
-            const product = products.find(productItem => productItem.id === cartItem.productId)
+            const product = products.find(productItem => productItem.id === cartItem.productId && cartItem.checked)
             if (!product) return;
 
             totalCartPriceCents += product.priceCents * cartItem.quantity;

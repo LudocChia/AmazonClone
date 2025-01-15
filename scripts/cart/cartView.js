@@ -87,7 +87,7 @@ export function updateTotalsDisplay({ totalCartQuantity, totalCartPriceCents }) 
         cartItemsTotalPriceElement.innerText = '';
         checkoutSummaryPriceElement.innerText = '';
     } else {
-        console.log(cartItemsTotalPriceElement.innerText = formatAsMYR(totalCartPriceCents));
+        cartItemsTotalPriceElement.innerText = formatAsMYR(totalCartPriceCents);
         checkoutSummaryPriceElement.innerText = formatAsMYR(totalCartPriceCents);
     }
 }
