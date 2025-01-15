@@ -1,6 +1,7 @@
 import { cart } from '../data/cartModel.js';
 import { products } from '../data/productsModel.js';
 import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './cartView.js';
+import '../data/backend-practice.js';
 
 // Update Header Cart Count
 cartQuantityDisplay(cart.cartItems.length);
