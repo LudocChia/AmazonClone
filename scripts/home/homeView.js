@@ -34,6 +34,7 @@ export function renderProductsList() {
                         <option value="10">10</option>
                     </select>
                 </div>
+                ${product.extraInfoHTML()}
                 <div class="product-list__message product-list__message--hidden" >
                 <span class="product-list__message-text"><i
                         class="bi bi-check2-circle"></i>Added</span>
