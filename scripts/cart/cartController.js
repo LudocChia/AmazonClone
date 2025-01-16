@@ -1,12 +1,11 @@
 import { cart } from '../data/cartModel.js';
 import { products, loadProductsFetch } from '../data/productsModel.js';
 import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './cartView.js';
+import { addOrder } from '../data/orders.js'
 
 async function loadPage() {
     try {
         const cartItemsElement = document.querySelector('.cart-items');
-        console.log('load page');
-
         await loadProductsFetch();
         cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
         attachCartEventListeners();
@@ -14,7 +13,8 @@ async function loadPage() {
         console.log('Unexpected error. Please try again later.')
     }
 }
-loadPage()
+loadPage();
+
 
 // Update Header Cart Count
 cartQuantityDisplay(cart.cartItems.length);
@@ -41,7 +41,7 @@ function attachCartEventListeners() {
     const deleteBtns = document.querySelectorAll('.cart-item__delete');
     const selectAllBtns = document.querySelector('.cart-list__select-all');
     const checkBoxes = document.querySelectorAll('.cart-item__checkbox');
-
+    const btnCheckout = document.querySelector('.button__checkout');
 
     decreaseBtns.forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -134,6 +134,28 @@ function attachCartEventListeners() {
         updateTotalsDisplay(cart.calculateSelectedCartItems());
     })
 
+    btnCheckout.addEventListener('click', async () => {
+        try {
+            const response = await fetch('https://supersimplebackend.dev/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cart: cart
+                })
+            })
+
+            const order = await response.json();
+            addOrder(order);
+        } catch (error) {
+            console.log('Unexpected error. Please try again later.')
+        }
+
+        window.location.href = 'order.html';
+
+
+    });
 }
 
 updateTotalsDisplay(cart.calculateSelectedCartItems());
