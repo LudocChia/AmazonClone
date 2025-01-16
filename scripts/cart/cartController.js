@@ -1,16 +1,12 @@
 import { cart } from '../data/cartModel.js';
-import { products, loadProducts } from '../data/productsModel.js';
+import { products, loadProductsFetch } from '../data/productsModel.js';
 import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './cartView.js';
 
 // Update Header Cart Count
 cartQuantityDisplay(cart.cartItems.length);
 
 // Initial Render
-new Promise((resolve) => {
-    loadProducts(() => {
-        resolve();
-    });
-}).then(() => {
+loadProductsFetch().then(() => {
     const cartItemsElement = document.querySelector('.cart-items');
     cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
     attachCartEventListeners();
