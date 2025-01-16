@@ -6,11 +6,23 @@ import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './car
 cartQuantityDisplay(cart.cartItems.length);
 
 // Initial Render
-loadProducts(() => {
+new Promise((resolve) => {
+    loadProducts(() => {
+        resolve();
+    });
+}).then(() => {
     const cartItemsElement = document.querySelector('.cart-items');
     cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
     attachCartEventListeners();
-})
+});
+
+// callback
+// loadProducts(() => {
+//     const cartItemsElement = document.querySelector('.cart-items');
+//     cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
+//     attachCartEventListeners();
+// })
+
 
 // Attach Event Listeners
 function attachCartEventListeners() {
