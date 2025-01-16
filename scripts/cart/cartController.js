@@ -2,15 +2,26 @@ import { cart } from '../data/cartModel.js';
 import { products, loadProductsFetch } from '../data/productsModel.js';
 import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './cartView.js';
 
+async function loadPage() {
+    const cartItemsElement = document.querySelector('.cart-items');
+    console.log('load page');
+
+    await loadProductsFetch();
+    cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
+    attachCartEventListeners();
+
+}
+loadPage()
+
 // Update Header Cart Count
 cartQuantityDisplay(cart.cartItems.length);
 
 // Initial Render
-loadProductsFetch().then(() => {
-    const cartItemsElement = document.querySelector('.cart-items');
-    cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
-    attachCartEventListeners();
-});
+// loadProductsFetch().then(() => {
+//     const cartItemsElement = document.querySelector('.cart-items');
+//     cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
+//     attachCartEventListeners();
+// });
 
 // callback
 // loadProducts(() => {
