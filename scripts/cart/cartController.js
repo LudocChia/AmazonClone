@@ -3,13 +3,16 @@ import { products, loadProductsFetch } from '../data/productsModel.js';
 import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './cartView.js';
 
 async function loadPage() {
-    const cartItemsElement = document.querySelector('.cart-items');
-    console.log('load page');
+    try {
+        const cartItemsElement = document.querySelector('.cart-items');
+        console.log('load page');
 
-    await loadProductsFetch();
-    cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
-    attachCartEventListeners();
-
+        await loadProductsFetch();
+        cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
+        attachCartEventListeners();
+    } catch (error) {
+        console.log('Unexpected error. Please try again later.')
+    }
 }
 loadPage()
 
