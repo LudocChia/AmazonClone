@@ -1,10 +1,7 @@
 import { cart } from '../data/cartModel.js';
-import { renderProductsList, cartQuantityDisplay } from './homeView.js';
+import { cartQuantityDisplay } from './homeView.js';
 
 cartQuantityDisplay(cart.cartItems.length);
-
-const productListElement = document.querySelector('.product-list');
-productListElement.innerHTML = renderProductsList();
 
 const buttonAddToCart = document.querySelectorAll('.button--add-to-cart');
 let timeoutId;

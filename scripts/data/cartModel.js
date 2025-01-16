@@ -1,4 +1,4 @@
-import { products } from './productsModel.js';
+import { products } from './products-normal.js';
 
 export class Cart {
     // class fields

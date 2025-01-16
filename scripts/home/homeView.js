@@ -1,7 +1,10 @@
-import { products } from '../data/productsModel.js';
-import { formatAsMYR } from '../utils/currency.js';
+import { products, loadProducts } from '../data/productsModel.js';
+
+loadProducts(renderProductsList);
 
 export function renderProductsList() {
+    const productListElement = document.querySelector('.product-list');
+
     let html = '';
 
     products.forEach((product) => {
@@ -45,7 +48,7 @@ export function renderProductsList() {
             </div>`
     });
 
-    return html;
+    productListElement.innerHTML = html;
 }
 
 export function cartQuantityDisplay(cartLength) {

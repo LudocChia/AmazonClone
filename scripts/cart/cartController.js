@@ -1,14 +1,16 @@
 import { cart } from '../data/cartModel.js';
-import { products } from '../data/productsModel.js';
+import { products, loadProducts } from '../data/productsModel.js';
 import { renderCartItems, updateTotalsDisplay, cartQuantityDisplay } from './cartView.js';
-import '../data/backend-practice.js';
 
 // Update Header Cart Count
 cartQuantityDisplay(cart.cartItems.length);
 
 // Initial Render
-const cartItemsElement = document.querySelector('.cart-items');
-cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
+loadProducts(() => {
+    const cartItemsElement = document.querySelector('.cart-items');
+    cartItemsElement.innerHTML = renderCartItems(cart.cartItems, products);
+    attachCartEventListeners();
+})
 
 // Attach Event Listeners
 function attachCartEventListeners() {
